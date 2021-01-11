@@ -1,2 +1,43 @@
 ---
 # tasks file for ansible-role-keepalived
+
+- block:
+
+    - name: install dependencies
+      apt:
+        name: "{{ keepalived_dependencies }}"
+        state: present
+        install_recommends: false
+
+    - name: install pkg
+      apt:
+        name: "{{ keepalived_pkg }}"
+        state: present
+        install_recommends: false
+
+    - name: start and enable
+      service:
+        name: keepalived
+        state: started
+        enabled: yes
+
+  become: yes
+  tags:
+    - keepalived
+    - install
+
+- block:
+
+    - name: setup config
+      template:
+        src: keepalived.conf.j2
+        dest: /etc/keepalived/keepalived.conf
+        owner: root
+        group: root
+        mode: 0644
+      notify: keepalived restart
+
+  become: yes
+  tags:
+    - keepalived
+    - setup

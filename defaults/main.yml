@@ -1,2 +1,7 @@
 ---
 # defaults file for ansible-role-keepalived
+
+keepalived_pkg: keepalived
+keepalived_dependencies: []
+
+keepalived_config: ''
